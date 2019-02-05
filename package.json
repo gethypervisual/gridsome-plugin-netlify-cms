@@ -1,0 +1,39 @@
+{
+  "name": "gridsome-plugin-netlify-cms",
+  "version": "0.1.0",
+  "description": "Gridsome.js plugin to include Netlify CMS",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gethypervisual/gridsome-plugin-netlify-cms.git"
+  },
+  "keywords": [
+    "gridsome",
+    "gridsome-plugin",
+    "netlify-cms"
+  ],
+  "author": "Toby Marsden",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gethypervisual/gridsome-plugin-netlify-cms/issues"
+  },
+  "homepage": "https://github.com/gethypervisual/gridsome-plugin-netlify-cms#readme",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "copy-webpack-plugin": "^4.6.0",
+    "html-webpack-exclude-assets-plugin": "0.0.7",
+    "html-webpack-plugin": "^3.2.0",
+    "installed-packages": "^1.0.4",
+    "mini-css-extract-plugin": "^0.5.0",
+    "netlify-cms": "^2.3.3",
+    "webpack": "^4.29.0",
+    "webpack-dev-middleware": "^3.5.1",
+    "val-loader": "^1.1.1"
+  }
+}

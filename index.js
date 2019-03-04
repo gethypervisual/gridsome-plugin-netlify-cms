@@ -2,7 +2,6 @@ const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const WebpackDevMiddleware = require('webpack-dev-middleware')
@@ -62,7 +61,7 @@ function createWebpackConfig({context, outDir, options, isProd}) {
     plugins: [
       
       /**
-       * Copy config.yml (either included or from path provided in options) to output dir
+       * Copy config.yml to output dir
        */
       new CopyWebpackPlugin([{from: options.configPath, to: 'config.yml'}]),
 
@@ -84,14 +83,7 @@ function createWebpackConfig({context, outDir, options, isProd}) {
         template: options.htmlPath,
         inject: options.injectScript,
         basePath: `${options.outputPath}/`
-      }),
-
-      /**
-       * Exclude CSS from index.html, as any imported styles are assumed to be
-       * targeting the editor preview pane. Uses `excludeAssets` option from
-       * `HtmlWebpackPlugin` config.
-       */
-      //new HtmlWebpackExcludeAssetsPlugin(),
+      })
 
     ].filter(p => p)
   }
@@ -115,7 +107,7 @@ module.exports = function (api, options) {
   /**
    * For `gridsome develop`: serve via webpack-dev-middleware
    */
-  api.configureDevServer((app) => {
+  api.configureServer((app) => {
     const webpackConfig = createWebpackConfig({ context, options })
 
     const compiler = webpack(webpackConfig)

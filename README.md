@@ -19,7 +19,7 @@ Add the Netlify CMS plugin in your `gridsome.config.js`:
 ```javascript
   plugins: [
     {
-			use: `gridsome-plugin-netlify-cms`
+      use: `gridsome-plugin-netlify-cms`
     } 
   ]
 ```
@@ -123,7 +123,6 @@ required):
     {
       use: `gridsome-plugin-netlify-cms`,
       options: {
-        plugins: [`gridsome-plugin-netlify-cms-hypervisual`],
         modulePath: `src/cms/index.js`,
         configPath: `src/cms/config.yml`,
         htmlPath: `src/cms/index.html`,

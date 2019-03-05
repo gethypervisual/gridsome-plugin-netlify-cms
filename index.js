@@ -22,9 +22,9 @@ function createWebpackConfig({context, outDir, options, isProd}) {
    */
   let output = {
     filename: isProd ? '[name].[contenthash:8].js' : '[name].js',
-    publicPath: options.outputPath
+    publicPath: options.publicPath
   }
-  if(outDir) { output.path = `${outDir}${options.outputPath}` }
+  if(outDir) { output.path = `${outDir}${options.publicPath}` }
 
   /**
    * - bundle both the provided plugins (from the parent project's node_modules folder) and the CMS module
@@ -82,7 +82,7 @@ function createWebpackConfig({context, outDir, options, isProd}) {
         excludeAssets: [/cms.css/],
         template: options.htmlPath,
         inject: options.injectScript,
-        basePath: `${options.outputPath}/`
+        basePath: `${options.publicPath}/`
       })
 
     ].filter(p => p)
@@ -114,7 +114,7 @@ module.exports = function (api, options) {
 
     const devMiddleware = WebpackDevMiddleware(compiler, {
       noInfo: !options.debug,
-      publicPath: options.outputPath,
+      publicPath: options.publicPath,
       logLevel: options.debug ? null : 'silent'
     })
 
@@ -128,7 +128,7 @@ module.exports.defaultOptions = () => ({
   configPath: 'src/admin/config.yml',
   modulePath: `${__dirname}/lib/cms.js`,
   htmlPath: `${__dirname}/templates/index.html`,
-  outputPath: '/admin',
+  publicPath: '/admin',
   injectScript: true,
   debug: false
 })

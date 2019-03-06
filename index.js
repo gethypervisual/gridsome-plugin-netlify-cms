@@ -37,8 +37,11 @@ function createWebpackConfig({context, outDir, options, isProd}) {
       cms: netlifyCMSPlugins.concat([options.modulePath])
     },
     output,
+    resolve: {
+      modules: [path.resolve(__dirname, 'node_modules'), path.resolve(context, 'node_modules'), 'node_modules']
+    },
     resolveLoader: {
-      modules: [path.resolve(__dirname, 'node_modules'), 'node_modules']
+      modules: [path.resolve(__dirname, 'node_modules'), path.resolve(context, 'node_modules'), 'node_modules']
     },
     module: {
       rules: [

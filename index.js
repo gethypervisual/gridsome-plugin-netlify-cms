@@ -2,10 +2,15 @@ const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+<<<<<<< HEAD
 const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+=======
+const CSSExtractPlugin = require('mini-css-extract-plugin')
+>>>>>>> Spike style generation
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const WebpackDevMiddleware = require('webpack-dev-middleware')
+const CreateFileWebpack = require('create-file-webpack')
 
 function createWebpackConfig({context, outDir, options, isProd}) {
 
@@ -105,6 +110,68 @@ module.exports = function (api, options) {
 
   const { context } = api
 
+  api.chainWebpack((config, chainWebpackOpts) => {
+
+    console.log(api)
+    console.log(config)
+
+    var assetsDir = path.relative(api.config.outDir, api.config.assetsDir)
+
+    config
+      .plugin('styles-for-netlify-cms')
+      .use(CSSExtractPlugin, [{
+        // Options similar to the same options in webpackOptions.output
+        // both options are optional
+        filename: `${assetsDir}/css/styles-for-netlify-cms.css`,
+        //filename: `${assetsDir}/css/styles${useHash ? '.[contenthash:8]' : ''}.css`
+        chunkFilename: `${assetsDir}/css/[id].styles-for-netlify-cms.css`
+      }]);
+
+    // During `gridsome develop`, the CSSExtractPlugin isn't 
+    // injected by Gridsome, so we need to do that ourselves
+    if(!chainWebpackOpts.isServer && !chainWebpackOpts.isProd) {
+      for(var lang of ['css', 'postcss', 'scss', 'sass', 'less', 'stylus']) {
+        config.module
+          .rule(lang)
+          .oneOf('normal')
+          .use('extract-css-loader')
+          .loader(CSSExtractPlugin.loader)
+          .before('css-loader')
+        config.module
+          .rule(lang)
+          .oneOf('modules').resourceQuery(/module/)
+          .use('extract-css-loader')
+          .loader(CSSExtractPlugin.loader)
+          .before('css-loader')
+      }
+    }
+
+    config.optimization.splitChunks({
+      cacheGroups: {
+        default: false
+      }
+    })
+
+/*    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          styles: {
+            name: 'styles',
+            test: /\.css$/,
+            chunks: 'all',
+            enforce: true
+          }
+        }
+      }
+    },*/
+
+    const util = require('util')
+
+    console.log(util.inspect(config.toConfig(), {showHidden: false, depth: 7}))
+
+
+  })  
+
   /**
    * For `gridsome build`
    */
@@ -120,6 +187,7 @@ module.exports = function (api, options) {
    * For `gridsome develop`: serve via webpack-dev-middleware
    */
   api.configureServer((app) => {
+
     const webpackConfig = createWebpackConfig({ context, options })
 
     const compiler = webpack(webpackConfig)
@@ -142,5 +210,6 @@ module.exports.defaultOptions = () => ({
   htmlPath: `${__dirname}/templates/index.html`,
   publicPath: '/admin',
   injectScript: true,
+  injectPreviewStyles: true,
   debug: false
 })

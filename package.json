@@ -36,5 +36,9 @@
   },
   "peerDependencies": {
     "netlify-cms": "^2"
+  },
+  "devDependencies": {
+    "create-file-webpack": "^1.0.2",
+    "postcss-loader": "^3.0.0"
   }
 }

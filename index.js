@@ -31,10 +31,11 @@ function createWebpackConfig({context, outDir, options, isProd}) {
    * - use val-loader to create the inject-plugins module dynamically before compiling, allowing for static
    *   imports of the provided plugin packages
    */
+
   return {
     mode: isProd ? 'production' : 'development',
     entry: {
-      cms: netlifyCMSPlugins.concat([options.modulePath])
+      cms: netlifyCMSPlugins.concat([path.resolve(context, options.modulePath)])
     },
     output,
     resolve: {

@@ -2,12 +2,8 @@ const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-<<<<<<< HEAD
 const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-=======
-const CSSExtractPlugin = require('mini-css-extract-plugin')
->>>>>>> Spike style generation
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const WebpackDevMiddleware = require('webpack-dev-middleware')
 const CreateFileWebpack = require('create-file-webpack')
@@ -119,7 +115,7 @@ module.exports = function (api, options) {
 
     config
       .plugin('styles-for-netlify-cms')
-      .use(CSSExtractPlugin, [{
+      .use(MiniCssExtractPlugin, [{
         // Options similar to the same options in webpackOptions.output
         // both options are optional
         filename: `${assetsDir}/css/styles-for-netlify-cms.css`,
@@ -127,7 +123,7 @@ module.exports = function (api, options) {
         chunkFilename: `${assetsDir}/css/[id].styles-for-netlify-cms.css`
       }]);
 
-    // During `gridsome develop`, the CSSExtractPlugin isn't 
+    // During `gridsome develop`, the MiniCssExtractPlugin isn't 
     // injected by Gridsome, so we need to do that ourselves
     if(!chainWebpackOpts.isServer && !chainWebpackOpts.isProd) {
       for(var lang of ['css', 'postcss', 'scss', 'sass', 'less', 'stylus']) {
@@ -135,13 +131,13 @@ module.exports = function (api, options) {
           .rule(lang)
           .oneOf('normal')
           .use('extract-css-loader')
-          .loader(CSSExtractPlugin.loader)
+          .loader(MiniCssExtractPlugin.loader)
           .before('css-loader')
         config.module
           .rule(lang)
           .oneOf('modules').resourceQuery(/module/)
           .use('extract-css-loader')
-          .loader(CSSExtractPlugin.loader)
+          .loader(MiniCssExtractPlugin.loader)
           .before('css-loader')
       }
     }

@@ -32,13 +32,12 @@
     "mini-css-extract-plugin": "^0.5.0",
     "val-loader": "^1.1.1",
     "webpack": "^4.29.0",
-    "webpack-dev-middleware": "^3.5.1"
+    "webpack-dev-middleware": "^3.5.1",
+    "create-file-webpack": "^1.0.2",
+    "postcss-loader": "^3.0.0"
   },
   "peerDependencies": {
     "netlify-cms": "^2"
   },
-  "devDependencies": {
-    "create-file-webpack": "^1.0.2",
-    "postcss-loader": "^3.0.0"
-  }
+  "devDependencies": {}
 }

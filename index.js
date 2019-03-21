@@ -2,6 +2,7 @@ const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const WebpackDevMiddleware = require('webpack-dev-middleware')
@@ -56,6 +57,13 @@ function createWebpackConfig({context, outDir, options, isProd}) {
               }
             }
           ]
+        },
+        {
+          test: /css$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            "css-loader"
+          ]
         }
       ]
     },
@@ -71,7 +79,8 @@ function createWebpackConfig({context, outDir, options, isProd}) {
        * path.
        */
       new MiniCssExtractPlugin({
-        filename: `[name].css`,
+        filename: `cms.css`,
+        chunkFilename: "[id].css"
       }),
 
       /**
@@ -80,11 +89,13 @@ function createWebpackConfig({context, outDir, options, isProd}) {
       new HtmlWebpackPlugin({
         title: options.htmlTitle,
         chunks: [`cms`],
-        excludeAssets: [/cms.css/],
+        excludeAssets: [/cms\.css/],
         template: options.htmlPath,
         inject: options.injectScript,
         basePath: `${options.publicPath}/`
-      })
+      }),
+
+      new HtmlWebpackExcludeAssetsPlugin()
 
     ].filter(p => p)
   }

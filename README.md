@@ -43,6 +43,52 @@ file](https://www.netlifycms.org/docs/add-to-your-site/#configuration) in
   ]
 ```
 
+### `plugins`
+
+(_optional_, default: `[]`)
+
+You can always install Netlify CMS widgets by creating your own module and setting the [`modulePath` option](#modulepath). But there's an easier way: install the widget via npm then add the npm module name to the `plugins` array in your project's `gridsome.config.js`:
+
+```bash
+npm install netlify-cms-widget-youtube
+```
+
+```javascript
+  plugins: [
+    {
+      use: `gridsome-plugin-netlify-cms`,
+      options: {
+        plugins: [`netlify-cms-widget-youtube`]
+      }
+    } 
+  ]
+```
+
+You can then use the widget inside your Netlify CMS `config.yml` file:
+
+```yml
+collections:
+  - name: "blogs"
+    label: "Blogs"
+    folder: "blog"
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "title", name: "title", widget: "string" }
+      - { label: "body", name: "body", widget: "markdown" }
+      - { label: "video", name: "video", widget: "youtube" }
+
+```
+
+This currently works with these Netlify CMS widgets:
+
+* [netlify-cms-widget-color](https://www.npmjs.com/package/netlify-cms-widget-color)
+* [netlify-cms-widget-fontawesome](https://www.npmjs.com/package/netlify-cms-widget-fontawesome)
+* [netlify-cms-widget-material-icons](https://www.npmjs.com/package/netlify-cms-widget-material-icons)
+* [netlify-cms-widget-native-color](https://www.npmjs.com/package/netlify-cms-widget-native-color)
+* [netlify-cms-widget-youtube](https://www.npmjs.com/package/netlify-cms-widget-youtube)
+
+Note that you *cannot* use both the `plugins` and `modulePath` option together: if you create your own module then you will have to import your Netlify CMS widgets manually.
+
 ### `modulePath`
 
 (_optional_, default: `undefined`)

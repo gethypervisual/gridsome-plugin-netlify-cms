@@ -159,6 +159,16 @@ Customize the path to Netlify CMS on your Gridsome site.
 Customize the value of the `title` tag in your CMS HTML (shows in the browser
 bar).
 
+### `enableIdentityWidget`
+
+(_optional_, type: `boolean`, default: `true`)
+
+`enableIdentityWidget` is `true` by default, allowing [Netlify
+Identity](https://www.netlify.com/docs/identity/) to be used without
+configuration, but you may need to disable it in some cases, such as when using
+a Netlify CMS backend that conflicts. This is currently known to be the case
+when using the GitLab backend, but only when using implicit OAuth.
+
 ## Example
 
 Here is the plugin with example values for all options (note that no option is
@@ -173,7 +183,8 @@ required):
         configPath: `src/cms/config.yml`,
         htmlPath: `src/cms/index.html`,
         publicPath: `/cms`,
-        htmlTitle: `My CMS`
+        htmlTitle: `My CMS`,
+        enableIdentityWidget: false
       }
     } 
   ]

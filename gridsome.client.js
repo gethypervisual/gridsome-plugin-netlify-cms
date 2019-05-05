@@ -1,3 +1,4 @@
+/* global __PATH_PREFIX__ */
 /**
  * Inspired by gatsby-plugin-netlify-cms
  * https://github.com/gatsbyjs/gatsby/blob/master/packages/gatsby-plugin-netlify-cms/src/gatsby-browser.js
@@ -18,7 +19,7 @@ const onInitialClientRender = ({ hash, enableIdentityWidget, publicPath }) => {
         netlifyIdentityWidget.on(`init`, user => {
           if (!user) {
             netlifyIdentityWidget.on(`login`, () => {
-              document.location.href = `${publicPath}/`
+              document.location.href = `${__PATH_PREFIX__}${publicPath}/`
             })
           }
         })

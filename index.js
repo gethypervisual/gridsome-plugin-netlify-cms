@@ -37,6 +37,12 @@ function createWebpackConfig({context, outDir, options, isProd}) {
     mode: isProd ? 'production' : 'development',
     entry: {
       cms: netlifyCMSPlugins.concat([path.resolve(context, options.modulePath)])
+      cms: [path.resolve(context, options.modulePath)]
+        .concat(netlifyCMSPlugins)
+        .concat([
+          options.enableIdentityWidget && `${__dirname}/cms-identity.js`,
+        ])
+        .filter(p => p),
     },
     output,
     resolve: {
@@ -97,13 +103,21 @@ function createWebpackConfig({context, outDir, options, isProd}) {
 
       new HtmlWebpackExcludeAssetsPlugin()
 
-    ].filter(p => p)
+      /**
+       * Pass in needed Gridsome config values.
+       */
+      new webpack.DefinePlugin({
+        __PATH__PREFIX__: pathPrefix,
+        CMS_PUBLIC_PATH: JSON.stringify(options.publicPath),
+      }),
+    ].filter(p => p),
   }
 }
 
 module.exports = function (api, options) {
 
   const { context } = api
+  const { pathPrefix } = _app.config
 
   /**
    * For `gridsome build`
@@ -111,7 +125,13 @@ module.exports = function (api, options) {
   api.afterBuild(({config}) => {
     const { outDir } = config
 
-    const webpackConfig = createWebpackConfig({ outDir, context, options, isProd: true })
+    const webpackConfig = createWebpackConfig({
+      outDir,
+      context,
+      options,
+      isProd: true,
+      pathPrefix,
+    })
 
     webpack(webpackConfig).run((err, stats) => { if(options.debug) console.log(stats.toString())})
   })

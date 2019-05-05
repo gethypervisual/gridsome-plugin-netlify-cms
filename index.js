@@ -68,7 +68,7 @@ function createWebpackConfig({context, outDir, options, isProd}) {
       ]
     },
     plugins: [
-      
+
       /**
        * Copy config.yml to output dir
        */
@@ -142,5 +142,6 @@ module.exports.defaultOptions = () => ({
   htmlPath: `${__dirname}/templates/index.html`,
   publicPath: '/admin',
   injectScript: true,
+  enableIdentityWidget: true,
   debug: false
 })

@@ -7,9 +7,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const WebpackDevMiddleware = require('webpack-dev-middleware')
 const CreateFileWebpack = require('create-file-webpack')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 function createWebpackConfig({context, outDir, options, isProd}) {
-
+  
   const netlifyCMSPlugins = Array.isArray(options.plugins) ? options.plugins : []
 
   /**
@@ -34,6 +35,8 @@ function createWebpackConfig({context, outDir, options, isProd}) {
    *   imports of the provided plugin packages
    */
 
+  //let importsLoaderConfig = 'imports-loader?' + [`pluginNames=>{${netlifyCMSPlugins.map((p, i) => `${i}:'${p}'`).join('%2C')}}`].concat(netlifyCMSPlugins.map((pluginName, i) => `plugin_${i}=${pluginName}`)).join(',') + '!' + './inject-plugins.js'
+
   return {
     mode: isProd ? 'production' : 'development',
     entry: {
@@ -41,7 +44,10 @@ function createWebpackConfig({context, outDir, options, isProd}) {
     },
     output,
     resolve: {
-      modules: [path.resolve(__dirname, 'node_modules'), path.resolve(context, 'node_modules'), 'node_modules']
+      modules: [path.resolve(__dirname, 'node_modules'), path.resolve(context, 'node_modules'), 'node_modules'],
+      alias: {
+        '~': path.resolve(context, 'src')
+      }
     },
     resolveLoader: {
       modules: [path.resolve(__dirname, 'node_modules'), path.resolve(context, 'node_modules'), 'node_modules']
@@ -58,13 +64,50 @@ function createWebpackConfig({context, outDir, options, isProd}) {
               }
             }
           ]
-        },
+        },/*
         {
-          test: /css$/,
+          test: require.resolve('./lib/inject-plugins.js'),
+          use: importsLoaderConfig
+        },*/
+        {
+          test: /\.css$/,
           use: [
             MiniCssExtractPlugin.loader,
             "css-loader"
           ]
+        },
+        {
+          test: /\.sass$/,
+          use: [
+              MiniCssExtractPlugin.loader,
+              "css-loader", // translates CSS into CommonJS
+              { 
+                loader: "sass-loader", // compiles Sass to CSS, using Node Sass by default
+                options: { indentedSyntax: true }
+              }
+          ]
+        },
+        {
+          test: /\.scss$/,
+          use: [
+              MiniCssExtractPlugin.loader,
+              "css-loader", // translates CSS into CommonJS
+              "sass-loader" // compiles Sass to CSS, using Node Sass by default
+          ]
+        },
+        {
+          test: /\.(js|jsx)$/,
+          exclude: /node_modules/,
+          use: {
+            loader: "babel-loader",
+            options: {
+              presets: ["@babel/preset-env", "@babel/preset-react"]
+            } 
+          }
+        },
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader'
         }
       ]
     },
@@ -96,7 +139,9 @@ function createWebpackConfig({context, outDir, options, isProd}) {
         basePath: `${options.publicPath}/`
       }),
 
-      new HtmlWebpackExcludeAssetsPlugin()
+      new HtmlWebpackExcludeAssetsPlugin(),
+
+      new VueLoaderPlugin()
 
     ].filter(p => p)
   }
@@ -108,8 +153,15 @@ module.exports = function (api, options) {
 
   api.chainWebpack((config, chainWebpackOpts) => {
 
-    console.log(api)
-    console.log(config)
+    //console.log(api.config.plugins)
+
+    var filesystemPlugins = api.config.plugins.filter(plugin => plugin.use === '@gridsome/source-filesystem')
+
+    //console.log(filesystemPlugins)
+
+    for(var plugin of filesystemPlugins) {
+      console.log(path.resolve(context, `./templates/${plugin.options.typeName}.vue`))
+    }
 
     var assetsDir = path.relative(api.config.outDir, api.config.assetsDir)
 
@@ -163,7 +215,7 @@ module.exports = function (api, options) {
 
     const util = require('util')
 
-    console.log(util.inspect(config.toConfig(), {showHidden: false, depth: 7}))
+    //console.log(util.inspect(config.toConfig(), {showHidden: false, depth: 7}))
 
 
   })  

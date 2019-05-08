@@ -7,7 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const WebpackDevMiddleware = require('webpack-dev-middleware')
 
-function createWebpackConfig({context, outDir, options, isProd}) {
+function createWebpackConfig({context, outDir, options, isProd, pathPrefix}) {
 
   const netlifyCMSPlugins = Array.isArray(options.plugins) ? options.plugins : []
 
@@ -36,11 +36,10 @@ function createWebpackConfig({context, outDir, options, isProd}) {
   return {
     mode: isProd ? 'production' : 'development',
     entry: {
-      cms: netlifyCMSPlugins.concat([path.resolve(context, options.modulePath)])
       cms: [path.resolve(context, options.modulePath)]
         .concat(netlifyCMSPlugins)
         .concat([
-          options.enableIdentityWidget && `${__dirname}/cms-identity.js`,
+          options.enableIdentityWidget && require.resolve('./lib/cms-identity.js'),
         ])
         .filter(p => p),
     },
@@ -101,7 +100,7 @@ function createWebpackConfig({context, outDir, options, isProd}) {
         basePath: `${options.publicPath}/`
       }),
 
-      new HtmlWebpackExcludeAssetsPlugin()
+      new HtmlWebpackExcludeAssetsPlugin(),
 
       /**
        * Pass in needed Gridsome config values.
@@ -117,7 +116,7 @@ function createWebpackConfig({context, outDir, options, isProd}) {
 module.exports = function (api, options) {
 
   const { context } = api
-  const { pathPrefix } = _app.config
+  const { pathPrefix } = api._app.config
 
   /**
    * For `gridsome build`
@@ -130,7 +129,7 @@ module.exports = function (api, options) {
       context,
       options,
       isProd: true,
-      pathPrefix,
+      pathPrefix
     })
 
     webpack(webpackConfig).run((err, stats) => { if(options.debug) console.log(stats.toString())})

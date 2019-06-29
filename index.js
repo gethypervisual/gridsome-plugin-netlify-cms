@@ -105,8 +105,9 @@ function createWebpackConfig({context, outDir, options, isProd, pathPrefix}) {
       /**
        * Pass in needed Gridsome config values.
        */
+
       new webpack.DefinePlugin({
-        __PATH__PREFIX__: pathPrefix,
+        __PATH_PREFIX__: JSON.stringify(pathPrefix),
         CMS_PUBLIC_PATH: JSON.stringify(options.publicPath),
       }),
     ].filter(p => p),
@@ -139,7 +140,8 @@ module.exports = function (api, options) {
    * For `gridsome develop`: serve via webpack-dev-middleware
    */
   api.configureServer((app) => {
-    const webpackConfig = createWebpackConfig({ context, options })
+
+    const webpackConfig = createWebpackConfig({ context, options, pathPrefix: '' })
 
     const compiler = webpack(webpackConfig)
 

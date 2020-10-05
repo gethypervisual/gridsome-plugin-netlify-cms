@@ -7,7 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const WebpackDevMiddleware = require('webpack-dev-middleware')
 
-function createWebpackConfig({context, outDir, options, isProd, pathPrefix}) {
+function createWebpackConfig({context, outputDir, options, isProd, pathPrefix}) {
 
   const netlifyCMSPlugins = Array.isArray(options.plugins) ? options.plugins : []
 
@@ -25,7 +25,7 @@ function createWebpackConfig({context, outDir, options, isProd, pathPrefix}) {
     filename: isProd ? '[name].[contenthash:8].js' : '[name].js',
     publicPath: options.publicPath
   }
-  if(outDir) { output.path = `${outDir}${options.publicPath}` }
+  if(outputDir) { output.path = `${outputDir}${options.publicPath}` }
 
   /**
    * - bundle both the provided plugins (from the parent project's node_modules folder) and the CMS module

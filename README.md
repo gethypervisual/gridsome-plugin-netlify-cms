@@ -192,7 +192,7 @@ required):
         htmlPath: `src/cms/index.html`,
         publicPath: `/cms`,
         htmlTitle: `My CMS`,
-        enableIdentityWidget: false
+        enableIdentityWidget: false,
         debug: true
       }
     } 

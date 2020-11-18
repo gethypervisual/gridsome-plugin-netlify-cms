@@ -169,6 +169,14 @@ configuration, but you may need to disable it in some cases, such as when using
 a Netlify CMS backend that conflicts. This is currently known to be the case
 when using the GitLab backend, but only when using implicit OAuth.
 
+### `debug`
+
+(_optional_, type: `boolean`, default: `false`)
+
+If Netlify CMS doesn't build, such as during deployment to a serverless platform,
+enabling this and then running `gridsome build` can provide useful information on a
+piece of customization that may be causing a silent failure in the build process.
+
 ## Example
 
 Here is the plugin with example values for all options (note that no option is
@@ -184,7 +192,8 @@ required):
         htmlPath: `src/cms/index.html`,
         publicPath: `/cms`,
         htmlTitle: `My CMS`,
-        enableIdentityWidget: false
+        enableIdentityWidget: false,
+        debug: true
       }
     } 
   ]
